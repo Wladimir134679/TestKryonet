@@ -17,9 +17,9 @@ public class MainServer {
     
     public static void main(String[] args) throws IOException{
         System.out.println("===== Start Server =====");
-        server = new Server(1024 * 1024, 1024 * 1024);
-        server.start();
-        server.bind(2106, 2101);
+        server = new Server(1024 * 1024, 1024 * 1024); // Указываем буфер, для производительности, чем меньше, тем больше
+        server.start(); // Начинаем подключения
+        server.bind(2106, 2101); // Подключаемся к портам
         Network.init(server.getKryo());
         
         server.addListener(new Listener(){
@@ -30,7 +30,7 @@ public class MainServer {
 
             @Override
             public void received(Connection connection, Object object){
-                System.out.println("Received: " + object);
+                System.out.println("Received: " + object); // Обрабатываем пакет
                 if(object instanceof PJSON){
                     JSONObject obj = ((PJSON)object).getJson();
                     System.out.println("Json / Action: " + obj.getString("action"));

@@ -19,20 +19,21 @@ public class MainClient {
     
     public static void main(String[] args) throws IOException{
         System.out.println("===== Start Client =====");
-        client = new Client(1024 * 1024, 1024 * 1024);
-        client.start();
-        client.connect(2000, "localhost", 2106, 2101);
-        Network.init(client.getKryo());
+        client = new Client(); //Создаём клиент
+        client.start(); // Запускаем клиент, слушает на фоне порты
+        client.connect(2000, "localhost", 2106, 2101); // Указываем 2секунды ожидания соединения, хостинг, порт для TCP и порт для UDP
+        Network.init(client.getKryo()); //Добавляем паеты с которыми будем работать
         
+        //Помещаем слушатель на соединение
         client.addListener(new Listener(){
             @Override
             public void connected(Connection connection){
-                System.out.println("Connection: " + connection.getID());
+                System.out.println("Connection: " + connection.getID()); //Подключился
             }
 
             @Override
             public void received(Connection connection, Object object){
-                System.out.println("Received: " + object);
+                System.out.println("Received: " + object); // Принял пакет
             }
 
             @Override
@@ -42,7 +43,7 @@ public class MainClient {
 
             @Override
             public void disconnected(Connection connection){
-                System.out.println("Disconnected");
+                System.out.println("Disconnected"); //Отключился
             }
             
         });
@@ -51,6 +52,8 @@ public class MainClient {
         mess.text = "Привет";
         client.sendUDP(mess);
         
+        // Для теста я создаю большой пакет данных, для проверки сколько данных может передать
+        // Будет работать, если в начале указать буфер new Client(1024 * 1024, 1024 * 1024);
         JSONObject obj = new JSONObject();
         obj.put("action", "ACtIon 1");
         obj.put("min", 0);
